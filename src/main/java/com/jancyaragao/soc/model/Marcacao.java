@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(name = "tb_exame_funcionario")
-public class ExameFuncionario {
+@Table(name = "tb_marcacao")
+public class Marcacao {
     
     @EqualsAndHashCode.Include
     @Id
@@ -36,8 +37,10 @@ public class ExameFuncionario {
     private Funcionario funcionario;
     
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Exame exame;
 
+    @NotNull(message = "A data da marcação é obrigatória")
     private LocalDate dataExame;
 
     @Enumerated(EnumType.STRING)
