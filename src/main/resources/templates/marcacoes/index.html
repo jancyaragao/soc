@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <link rel="icon" href="https://www.soc.com.br/wp-content/uploads/2021/01/favicon.ico" sizes="32x32">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid text-center">
+            <a class="navbar-brand" href="/">
+                <img src="https://www.soc.com.br/wp-content/uploads/2020/12/logo-soc.svg" alt="Logo" width="70"
+                    height="45" class="d-inline-block align-text-top">
+            </a>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <a class="nav-link" href="/exames">Exames</a>
+                    <a class="nav-link" href="/funcionarios">Funcionários</a>
+                    <a class="nav-link active" href="/marcacoes">Marcações</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="d-md-flex justify-content-md-end">
+            <a th:href="@{/marcacoes/adicionar}" type="button" class="btn btn-info text-light mt-3 ms-1"
+                id="adicionar">Adicionar <i class="fa-regular fa-calendar-plus"></i></a>
+            <a type="button" class="btn btn-light mt-3 ms-1" id="relatorio" data-bs-toggle="modal"
+                data-bs-target="#modalRelatorio">Relatórios <i class="fa-solid fa-file-lines"></i></a>
+        </div>
+        <table class="table table-striped text-center mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Funcionário</th>
+                    <th scope="col">Exame</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Editar</th>
+                    <th scope="col">Remover</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${marcacoes.empty}">
+                    <td colspan="6"> Sem marcações cadastradas </td>
+                </tr>
+                <tr th:each="marcacao : ${marcacoes}">
+                    <td th:text="${marcacao.funcionario.nome}"></td>
+                    <td th:text="${marcacao.exame.nome}"></td>
+                    <td th:text="${marcacao.dataExame}"></td>
+                    <td th:text="${marcacao.statusExame}"></td>
+                    <td><a th:href="@{/marcacoes/editar/{id}(id=${marcacao.id})}"><i
+                                class="fa-regular fa-pen-to-square text-info"></i></a>
+                    <td><a th:href="@{/marcacoes/excluir/{id}(id=${marcacao.id})}"><i
+                                class="fa-regular fa-trash-can text-danger"></i></a>
+                </tr>
+            </tbody>
+        </table>
+        <div class="modal fade" id="modalRelatorio" tabindex="-1" aria-labelledby="modalRelatorioLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalRelatorioLabel">Relatórios</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#" th:action="@{/marcacoes/relatorios}" method="GET" class="mt-4">
+                            <div class="mb-3">
+                                <label for="dataInicial" class="col-form-label">Data inicial:</label>
+                                <input type="text" class="form-control" id="dataInicial" name="min">
+                            </div>
+                            <div class="mb-3">
+                                <label for="dataFinal" class="col-form-label">Data final:</label>
+                                <input type="text" class="form-control" id="dataFinal" name="max">
+                            </div>
+                            <div class="d-md-flex justify-content-md-end">
+                                <button type="reset" class="btn btn-secondary mt-3 me-1" id="desfazer">Desfazer <i
+                                        class="fa-solid fa-rotate-left"></i></button>
+                                <button type="submit" class="btn btn-success mt-3 ms-1" id="gerar">Gerar <i
+                                        class="fa-solid fa-file-circle-check"></i></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"
+        integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $('#dataInicial').mask("00/00/0000", { placeholder: "__/__/____" });
+        $('#dataFinal').mask("00/00/0000", { placeholder: "__/__/____" });
+    </script>
+</body>
+
+</html>
