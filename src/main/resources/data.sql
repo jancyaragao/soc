@@ -10,8 +10,8 @@ INSERT INTO tb_funcionario (nome, idade) VALUES ('Silvana Cariolano', 40);
 INSERT INTO tb_funcionario (nome, idade) VALUES ('Jâncy Roni', 45);
 INSERT INTO tb_funcionario (nome, idade) VALUES ('Jâncy Rafael', 9);
 
-INSERT INTO tb_exame_funcionario (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (1, 5, '2022-12-10', 'PENDENTE');
-INSERT INTO tb_exame_funcionario (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (2, 4, '2022-12-10', 'PENDENTE');
-INSERT INTO tb_exame_funcionario (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (3, 3, '2022-12-10', 'PENDENTE');
-INSERT INTO tb_exame_funcionario (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (4, 2, '2022-12-10', 'PENDENTE');
-INSERT INTO tb_exame_funcionario (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (5, 1, '2022-12-10', 'PENDENTE');
+INSERT INTO tb_marcacao (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (1, 5, '2022-12-12', 'PENDENTE');
+INSERT INTO tb_marcacao (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (2, 4, '2022-12-31', 'PENDENTE');
+INSERT INTO tb_marcacao (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (3, 3, '2022-12-10', 'PENDENTE');
+INSERT INTO tb_marcacao (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (4, 2, '2022-12-10', 'PENDENTE');
+INSERT INTO tb_marcacao (funcionario_codigo, exame_codigo, data_exame, status_exame) VALUES (5, 1, '2023-12-10', 'PENDENTE');
