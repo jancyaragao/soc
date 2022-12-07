@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +25,10 @@ public class Exame {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
 
+    @NotEmpty(message = "O nome do exame é obrigatório")
+    @Size(min = 5, max = 250)
     private String nome;
+    
     private String descricao;
 
 }
