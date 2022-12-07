@@ -1,63 +1,81 @@
 package com.jancyaragao.soc.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.jancyaragao.soc.model.Exame;
 import com.jancyaragao.soc.repository.ExameRepository;
+import com.jancyaragao.soc.repository.MarcacaoRepository;
+
+import jakarta.validation.Valid;
 
 @RequestMapping("/exames")
-@RestController
+@Controller
 public class ExameController {
-    
+
     @Autowired
     private ExameRepository exameRepository;
 
+    @Autowired
+    private MarcacaoRepository marcacaoRepository;
 
     @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    public List<Exame> listar() {
-        return exameRepository.findAll();
+    public String listar(Model model) {
+        model.addAttribute("exames", exameRepository.findAll());
+        return "exames/index";
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Exame adicionar(@RequestBody Exame exame) {
-        return exameRepository.save(exame);
+    @GetMapping("/adicionar")
+    public String adicionar(Model model) {
+        model.addAttribute("exame", new Exame());
+        return "exames/adicionar";
     }
 
-    @PutMapping("/{codigo}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Exame> atualizar(@PathVariable Long codigo, @RequestBody Exame exame) {
-        if (!exameRepository.existsById(codigo)) {
-            return ResponseEntity.notFound().build();
+    @PostMapping("/salvar")
+    public String salvar(@Valid @ModelAttribute("exame") Exame exame, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "exames/adicionar";
         }
+
+        exameRepository.save(exame);
+        return "redirect:/exames";
+    }
+
+    @GetMapping("/editar/{codigo}")
+    public String editar(@PathVariable Long codigo, Model model) {
+        model.addAttribute("exame", exameRepository.getReferenceById(codigo));
+        return "exames/editar";
+    }
+
+    @PostMapping("/atualizar/{codigo}")
+    public String atualizar(@PathVariable Long codigo, @Valid @ModelAttribute("exame") Exame exame,
+            BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "exames/editar";
+        }
+
         exame.setCodigo(codigo);
-
-        return ResponseEntity.ok(exameRepository.save(exame));
+        exameRepository.save(exame);
+        return "redirect:/exames";
     }
 
-    @DeleteMapping("/{codigo}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<Void> remover(@PathVariable Long codigo) {
-        if (!exameRepository.existsById(codigo)) {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/excluir/{codigo}")
+    public String excluir(@PathVariable Long codigo, Model model) {
+        if(marcacaoRepository.existsByExame(codigo)) {
+            model.addAttribute("exames", exameRepository.findAll());
+            model.addAttribute("messagemErro", "Não foi possível remover, exame já marcado");
+            return "exames/index";
         }
-        exameRepository.deleteById(codigo);
 
-        return ResponseEntity.noContent().build();
+        exameRepository.deleteById(codigo);
+        return "redirect:/exames";
     }
 
 }
